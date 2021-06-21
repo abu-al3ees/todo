@@ -18,6 +18,14 @@ class ToDo extends React.Component {
     item.complete = false;
     this.setState({ list: [...this.state.list, item]});
   };
+   deleteItem=(id)=>{
+   //still not finish
+  };
+
+
+   editeItem = (id) => {
+    
+  }
 
   toggleComplete = id => {
 
