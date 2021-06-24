@@ -1,70 +1,56 @@
-import {useState,useEffect} from 'react';
-
 import axios from 'axios';
 
-const useAjax = (url)=>{
+const routes = (action) => {
+  const api = 'https://danengel-api-server.herokuapp.com/todo';
 
-    const [list , setList]= useState([])
-    
-    
-    const api = async (method, url , item)=>{
-        const toDo= await axios({
-            method: method,
-            url: url,
-            mode: 'cors',
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            data: item,
-            })
-        return toDo.data
-        }
-    
-    
-    const post=(item)=>{
-        api('post',url,item)
-        setList( [...list, item]);
-        }
-    
-    
-    const get = ()=>{
-        const getAllData = async()=>{let newList= await api('get',url,)
-        setList(newList.results)
-            }
-        getAllData()
-       
-        }
-    
-    
-    const put=(id,updateText)=>{
-        console.log(list,'/*/*/*/');
-        let urlExtended = `${url}/${id}`;
-        
-        
-        let item = list.filter(i => i._id === id)[0] || {}; 
-        console.log(item,'item');
-        if (item._id) {
-            item.text = updateText;
-            let updatelist = list.map(listItem => listItem._id === item._id ? item : listItem);
-            api('put',urlExtended,item)
-          setList(updatelist);
-        }
-        }
-    
-    
-        const deleted = (item) => {
-            let extendedUrl = `${url}/${item._id}`;
-            api('delete', extendedUrl);
-            let deletedList = list.filter(el=>item._id!==el._id)
-            setList(deletedList)
-          }; 
-    
-    
-    return [list,
-         post,
-          get,
-           put,
-            deleted]
-    }
-    
-    
-    export default useAjax;
+  const getItems = (callback) => {
+    axios.get(api).then(response => {
+      const array = response.data;
+      callback(array);
+    })
+  }
+
+  const addItems = (data, callback) => {
+    // console.log(`inside addItem ${data.text}`, data.assignee, data.completed, data.difficulty);
+    axios({
+      method: 'post',
+      url: api,
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: { 'Content-Type': 'application/json' },
+      data: data,
+    }).then(response => {
+      const newItem = response.data;
+      callback(newItem);
+    }).catch(err => console.log(err))
+  }
+
+  const deleteItems = (id, callback) => {
+    axios({
+      method: 'delete',
+      url: `${api}/${id}`
+    }).then(response => {
+      callback();
+    }).catch(err => console.log(err));
+  }
+
+  const updateItems = (id, data, callback) => {
+    axios({
+      method: 'put',
+      url: `${api}/${id}`,
+      data: data
+    }).then(response => {
+      const updatedItem = response.data;
+      callback(updatedItem);
+    }).catch(err => console.log(err));
+  }
+
+  return [
+    getItems,
+    addItems,
+    deleteItems,
+    updateItems
+  ]
+}
+export default routes;
+

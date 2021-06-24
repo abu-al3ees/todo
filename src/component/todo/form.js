@@ -1,25 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {Button} from 'react-bootstrap';
+import useForm from '../todo/hooks/useForm';
 
 import Form from 'react-bootstrap/Form';
 
 
 function TodoForm(props) {
-  const [item,setItem] = useState({});
-
-  const handleInputChange = e => {
-    
-    setItem( {...item, [e.target.name]: e.target.value  });
-    
-};
-const  handleSubmit = (e) => {
-  e.preventDefault();
-  e.target.reset();
-  props.handleSubmit(item);
-  const item1 = {};
-  setItem(item1);
-};
+  const [handleSubmit,handleInputChange] = useForm(props.addItem);
 
   return (
     <>
