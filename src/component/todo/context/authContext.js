@@ -49,7 +49,7 @@ function AuthProvider(props) {
     console.log(data);
     this.validateToken(data.token);
     // verify ==> with the secret
-    // decode ==> does not need the secret
+    // decode ==> does not need th secret
 }
 
   const signup = async (username, email, password, role) => {
