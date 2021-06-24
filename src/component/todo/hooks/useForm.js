@@ -1,4 +1,3 @@
-/* eslint-disable no-self-assign */
 import {useState} from 'react';
 const useForm=(props)=>{
 const [item,setItem] = useState({})
